@@ -1,0 +1,39 @@
+<domain type='kvm'>
+  <name>vm-with-nesting</name>
+  <memory unit='KiB'>4194304</memory>
+  <vcpu placement='static'>4</vcpu>
+  <os>
+    <type arch='x86_64' machine='pc-i440fx-2.10'>hvm</type>
+    <boot dev='hd'/>
+  </os>
+  <devices>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/path/to/your/vm.qcow2'/>
+      <target dev='vda' bus='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+    </disk>
+    <interface type='network'>
+      <mac address='52:54:00:ff:ff:ff'/>
+      <source network='default'/>
+      <model type='virtio'/>
+      <driver name='vhost' queues='4'/>
+      <alias name='net0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </interface>
+    <graphics type='vnc' port='-1' autoport='yes' keymap='en-us'/>
+  </devices>
+  <cpu mode='host-passthrough'>
+    <model fallback='allow'/>
+    <topology sockets='1' cores='4' threads='1'/>
+  </cpu>
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+  <nested>
+    <virtual>
+      <vm id='1'/>
+    </virtual>
+  </nested>
+</domain>
